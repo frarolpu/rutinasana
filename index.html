@@ -359,18 +359,18 @@ function buildItems(n,F,E,C,Z,BS,Se) {
   const dDose=n<=42?'Aguacate, frutas, coco, vegetales, semillas permitidas (nueces, almendras, merey, avellanas). ❌ Sin lácteos, arroz, trigo ni maní en todo el protocolo.':n<=56?'Desde semana 7 puedes romper con 2 huevos o 1 pieza de pescado cada 3 semanas. ❌ Sin lácteos, arroz ni trigo.':'Puedes añadir papa, yuca, plátano, frijoles, lentejas y otros granos cocinados. ❌ Sin lácteos, arroz ni trigo.';
   items.push({icon:'🥗',name:dName,slot:'always',dose:dDose});
   // ── MAÑANA (primera hora, en ayuno) ──
-  if(!isFast)items.push({icon:'🥕',name:'Zumo de Zanahoria',slot:'morning',dose:'40 onzas (litro y cuarto) al día con extractor. Puedes refrigerar hasta 1 día.'});
+  if(!isFast)items.push({icon:'🥕',name:'Zumo de Zanahoria',slot:'morning',dose:'Litro y cuarto al día con extractor. Puedes refrigerar hasta 1 día.'});
   items.push({icon:'☀️',name:'B COMP +CoQ10',slot:'morning',dose:'2 cápsulas por la mañana, a primera hora.'});
   items.push({icon:'🧬',name:'Enzymes +Serra · Mañana',slot:'morning',dose:'1 cápsula en ayuno a primera hora de la mañana con vaso de agua de 40ml. No comer sólido 1 hora después.'});
   if(isCab){
-    items.push({icon:'🥬',name:'Zumo de Repollo',slot:'morning',dose:'8 onzas en ayuno (antes del sólido). Verde o morado. Ciclo: 3 semanas ON / 2 semanas OFF.'});
+    items.push({icon:'🥬',name:'Zumo de Repollo',slot:'morning',dose:'Un vaso en ayuno (antes del sólido). Verde o morado. Ciclo: 3 semanas ON / 2 semanas OFF.'});
     const od=Math.min(((n-1)%35)+1,10);
     items.push({icon:'🌿',name:'Oregano Oil',slot:'morning',dose:`${od} gota${od>1?'s':''} añadidas al zumo de repollo. Sube 1 gota/día hasta 10. Suspende si hay malestar.`});}
   if(bsPos!==null){const bd=bsPos<=3?'½ cucharadita (días 1-3 del ciclo)':bsPos<=6?'1 cucharadita × 2 veces al día (mañana y tarde)':('1 cucharadita × 3 veces al día (día '+bsPos+' del ciclo)');
     items.push({icon:'🫙',name:'Black Seed Oil',slot:'morning',dose:bd+'. Tomarlo a 3+ horas del Orégano Oil. Ciclo: 4 semanas ON / 2 semanas OFF.'});}
   // ── MEDIA MAÑANA (~3h después del desayuno) ──
   items.push({icon:'💧',name:'Ormux',slot:'midmorning',dose:'1 medida a media mañana diluida en 1 vaso de agua o zumo.'});
-  items.push({icon:'⬛',name:'Charcoal +AloeFerox · Media Mañana',slot:'midmorning',dose:'2 cápsulas a media mañana con agua o zumo (zanahoria, pepino o celery). Tomar con 3h de diferencia de tus medicinas.'});
+  items.push({icon:'⬛',name:'Charcoal +AloeFerox · Media Mañana',slot:'midmorning',dose:'2 cápsulas a media mañana con agua o zumo (zanahoria, pepino o apio). Tomar con 3h de diferencia de tus medicinas.'});
   // ── MEDIODÍA (con el almuerzo) ──
   if(Se.has(n))items.push({icon:'🔶',name:'Selenium +Active T3',slot:'noon',dose:'2 cápsulas con el almuerzo. Ciclo: 1 mes ON / 1 mes OFF. ⚠️ Suspender si hay mareo o dolor de cabeza.'});
   // ── TARDE (media tarde) ──
