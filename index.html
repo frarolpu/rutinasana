@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Protocolo · Guía</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #f0f4f8;
+      color: #0f172a;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      overflow: hidden;
+    }
+    body {
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── SETUP ── */
+    #setup {
+      position: fixed; inset: 0; background: #f0f4f8;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px; z-index: 200;
+    }
+    #setup.hidden { display: none; }
+    .setup-card {
+      background: #fff; border: 2.5px solid #2563eb;
+      border-radius: 22px; padding: 30px 22px;
+      width: 100%; max-width: 380px; text-align: center;
+      box-shadow: 0 8px 32px rgba(37,99,235,.12);
+    }
+    .setup-card h2 { font-size: 1.4rem; color: #2563eb; margin-bottom: 8px; }
+    .setup-card p  { font-size: 1rem; color: #64748b; margin-bottom: 20px; line-height: 1.6; }
+    .setup-input {
+      font-size: 1.15rem; padding: 13px;
+      border-radius: 12px; border: 2px solid #cbd5e1;
+      background: #f8fafc; color: #0f172a;
+      width: 100%; margin-bottom: 16px; text-align: center;
+    }
+    .setup-input:focus { outline: none; border-color: #2563eb; }
+    .btn-go {
+      background: #2563eb; color: #fff;
+      font-weight: 800; font-size: 1.15rem;
+      padding: 14px; border: none; border-radius: 14px;
+      width: 100%; cursor: pointer;
+    }
+
+    /* ── HEADER ── */
+    .app-header {
+      background: #fff;
+      padding: 11px 16px 9px;
+      border-bottom: 2px solid #e2e8f0;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .h-left .h-date { font-size: 1.05rem; font-weight: 800; color: #0f172a; }
+    .h-left .h-sub  { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
+    .day-pill {
+      background: #2563eb; color: #fff;
+      font-weight: 800; font-size: 0.82rem;
+      padding: 5px 14px; border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    /* ── SLOT NAVIGATOR ── */
+    .slot-wrap {
+      flex: 1;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+
+    /* Slot header bar */
+    .slot-bar {
+      display: flex; align-items: stretch;
+      flex-shrink: 0;
+    }
+    .slot-arrow {
+      background: transparent; border: none;
+      font-size: 2rem; font-weight: 900;
+      padding: 0 16px;
+      cursor: pointer; color: #64748b;
+      display: flex; align-items: center;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+      transition: color .15s;
+    }
+    .slot-arrow:active { color: #0f172a; }
+    .slot-title-block {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 12px 0 10px;
+    }
+    .slot-icon  { font-size: 2rem; line-height: 1; }
+    .slot-name  {
+      font-size: 1.45rem; font-weight: 900;
+      letter-spacing: -.3px; color: #0f172a; margin-top: 2px;
+    }
+    .slot-count { font-size: 0.78rem; color: #94a3b8; margin-top: 2px; }
+
+    /* Color bar under slot title */
+    .slot-color-bar { height: 4px; flex-shrink: 0; }
+
+    /* Dot indicators */
+    .dots {
+      display: flex; justify-content: center; gap: 7px;
+      padding: 7px 0 5px;
+      flex-shrink: 0;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #cbd5e1; transition: background .2s, transform .2s;
+    }
+    .dot.active { transform: scale(1.35); }
+
+    /* ── ITEMS LIST ── */
+    .items-list {
+      flex: 1; overflow: hidden;
+      padding: 4px 12px 8px;
+      display: flex; flex-direction: column;
+      gap: 5px;
+    }
+
+    .item-row {
+      background: #fff;
+      border-radius: 16px;
+      padding: 11px 14px;
+      display: flex; align-items: center; gap: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      border-left: 5px solid transparent;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .12s, transform .1s;
+      flex-shrink: 0;
+    }
+    .item-row:active { transform: scale(.97); background: #f8fafc; }
+
+    .item-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .item-text { flex: 1; min-width: 0; }
+    .item-name {
+      font-size: 1.1rem; font-weight: 800;
+      color: #0f172a; line-height: 1.25;
+    }
+    .item-dose {
+      font-size: 0.88rem; color: #64748b;
+      line-height: 1.4; margin-top: 2px;
+      overflow: hidden; display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .item-chevron { color: #cbd5e1; font-size: 1.2rem; flex-shrink: 0; }
+
+    /* Fasting special */
+    .fasting-block {
+      background: #fff5f5; border: 2.5px solid #f87171;
+      border-radius: 16px; padding: 20px 14px;
+      text-align: center; margin: 0 4px;
+    }
+    .fasting-block .f-ico   { font-size: 2.5rem; }
+    .fasting-block .f-title { font-size: 1.5rem; font-weight: 900; color: #dc2626; margin: 8px 0 4px; }
+    .fasting-block .f-desc  { font-size: 1rem; color: #94a3b8; line-height: 1.5; }
+
+    /* Empty slot */
+    .slot-empty {
+      text-align: center; padding: 20px;
+      color: #94a3b8; font-size: 0.95rem;
+    }
+
+    /* ── DETAIL MODAL (bottom sheet) ── */
+    .backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 100; display: none;
+      align-items: flex-end; justify-content: center;
+    }
+    .backdrop.open { display: flex; }
+    .sheet {
+      background: #fff; border-radius: 22px 22px 0 0;
+      padding: 18px 22px 30px;
+      width: 100%; max-width: 480px;
+      max-height: 72vh; overflow-y: auto;
+      animation: up .2s ease;
+    }
+    @keyframes up { from { transform:translateY(100%); opacity:0 } to { transform:translateY(0); opacity:1 } }
+    .sheet-handle { width:36px; height:4px; background:#e2e8f0; border-radius:2px; margin:0 auto 16px; }
+    .sheet-ico    { font-size: 2.8rem; text-align: center; }
+    .sheet-name   { font-size: 1.4rem; font-weight: 800; text-align: center; margin: 8px 0 14px; color: #0f172a; }
+    .sheet-dose   { font-size: 1.08rem; color: #475569; line-height: 1.75; text-align: center; }
+    .sheet-close  {
+      display: block; width: 100%; margin-top: 18px;
+      padding: 14px; background: #f1f5f9; border: none;
+      border-radius: 14px; color: #0f172a;
+      font-size: 1.08rem; font-weight: 700; cursor: pointer;
+    }
+
+    /* ── BOTTOM NAV ── */
+    .viewnav {
+      display: flex; gap: 5px; padding: 7px 10px;
+      background: #fff; border-top: 2px solid #e2e8f0;
+      flex-shrink: 0;
+    }
+    .vnbtn {
+      flex: 1; padding: 9px 4px;
+      background: transparent; border: 1.5px solid #e2e8f0;
+      color: #94a3b8; font-size: 0.78rem; font-weight: 700;
+      border-radius: 10px; cursor: pointer; text-align: center;
+      text-decoration: none; display: block;
+    }
+    .vnbtn.active { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+
+    /* Slot color themes */
+    .theme-morning .slot-bar  { background: #fffbeb; }
+    .theme-morning .slot-name { color: #92400e; }
+    .theme-morning .slot-color-bar { background: #f59e0b; }
+    .theme-morning .dot.active { background: #f59e0b; }
+    .theme-morning .item-row  { border-left-color: #f59e0b; }
+
+    .theme-noon .slot-bar   { background: #f0f9ff; }
+    .theme-noon .slot-name  { color: #0c4a6e; }
+    .theme-noon .slot-color-bar { background: #0ea5e9; }
+    .theme-noon .dot.active { background: #0ea5e9; }
+    .theme-noon .item-row   { border-left-color: #0ea5e9; }
+
+    .theme-night .slot-bar  { background: #f5f3ff; }
+    .theme-night .slot-name { color: #3730a3; }
+    .theme-night .slot-color-bar { background: #6366f1; }
+    .theme-night .dot.active { background: #6366f1; }
+    .theme-night .item-row  { border-left-color: #6366f1; }
+
+    .theme-always .slot-bar  { background: #f0fdf4; }
+    .theme-always .slot-name { color: #14532d; }
+    .theme-always .slot-color-bar { background: #22c55e; }
+    .theme-always .dot.active { background: #22c55e; }
+    .theme-always .item-row  { border-left-color: #22c55e; }
+
+    .theme-fast .slot-bar   { background: #fff5f5; }
+    .theme-fast .slot-name  { color: #991b1b; }
+    .theme-fast .slot-color-bar { background: #f87171; }
+  </style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="setup-card">
+    <h2>🌿 Mi Protocolo</h2>
+    <p>Indica la fecha en que empezaste el protocolo.</p>
+    <input type="date" class="setup-input" id="start-input" />
+    <button class="btn-go" onclick="initApp()">Ver mi guía →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="h-left">
+    <div class="h-date" id="h-date">—</div>
+    <div class="h-sub">Protocolo · 4 meses</div>
+  </div>
+  <div class="day-pill" id="day-pill">Día —</div>
+</header>
+
+<!-- SLOT NAVIGATOR -->
+<div class="slot-wrap" id="slot-wrap">
+
+  <!-- Time block header -->
+  <div class="slot-bar" id="slot-bar">
+    <button class="slot-arrow" id="btn-prev" onclick="changeSlot(-1)">‹</button>
+    <div class="slot-title-block">
+      <div class="slot-icon"  id="slot-icon">—</div>
+      <div class="slot-name"  id="slot-name">—</div>
+      <div class="slot-count" id="slot-count">—</div>
+    </div>
+    <button class="slot-arrow" id="btn-next" onclick="changeSlot(1)">›</button>
+  </div>
+
+  <div class="slot-color-bar" id="slot-color-bar"></div>
+
+  <!-- Dot indicators -->
+  <div class="dots" id="dots"></div>
+
+  <!-- Items -->
+  <div class="items-list" id="items-list"></div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="viewnav">
+  <a class="vnbtn" href="index.html">📋 Lista</a>
+  <a class="vnbtn" href="option2.html">⊞ Panel</a>
+  <a class="vnbtn active" href="option3.html">➤ Guía</a>
+</nav>
+
+<!-- MODAL -->
+<div class="backdrop" id="modal" onclick="closeModal(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-ico"  id="m-ico"></div>
+    <div class="sheet-name" id="m-name"></div>
+    <div class="sheet-dose" id="m-dose"></div>
+    <button class="sheet-close" onclick="closeModal()">Cerrar ✕</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// PROTOCOL LOGIC (same as option2)
+// ═══════════════════════════════════════════════
+const TOTAL = 120;
+
+function loadStart() {
+  const s = localStorage.getItem('rutinasana_start');
+  return s ? new Date(s + 'T00:00:00') : null;
+}
+function saveStart(d) { localStorage.setItem('rutinasana_start', d.toISOString().split('T')[0]); }
+
+function pDay(date, start) {
+  const d = Math.floor((date - start) / 86400000);
+  return (d >= 0 && d < TOTAL) ? d + 1 : 0;
+}
+function getFasting() {
+  const s=new Set(); const pat=[1,2,3,1]; let day=1,wk=1;
+  while(day<=TOTAL){const n=pat[(wk-1)%4];for(let i=0;i<n&&day+i<=TOTAL;i++)s.add(day+i);day+=7;wk++;}
+  return s;
+}
+function getEnema(F){const s=new Set();for(let d=10;d<=TOTAL;d++)if((d-10)%7<3&&!F.has(d))s.add(d);return s;}
+function getCabbage(){const s=new Set();for(let c=0;c<3;c++){const st=c*35+1;for(let d=st;d<st+21&&d<=TOTAL;d++)s.add(d);}return s;}
+function getZinc(){const s=new Set();for(let d=1;d<=TOTAL;d++)if(Math.floor((d-1)/14)%2===0)s.add(d);return s;}
+function getBlackSeed(){const m=new Map();for(let d=8;d<=TOTAL;d++){const pos=(d-8)%42;if(pos<28)m.set(d,pos+1);}return m;}
+function getSelenium(){const s=new Set();for(let d=8;d<=TOTAL;d++)if(Math.floor((d-1)/30)%2===0)s.add(d);return s;}
+
+function buildItems(n,F,E,C,Z,BS,Se) {
+  const isFast=F.has(n),isEnema=E.has(n),isCab=C.has(n);
+  const isZinc=Z.has(n),bsPos=BS.get(n)??null;
+  const items=[];
+  if(isFast){items.push({icon:'⚡',name:'AYUNO',slot:'fast',dose:'Sin comida ni jugos. Solo agua. 24 horas de descanso digestivo.'});return items;}
+  const dName=n<=42?'Dieta Cruda Vegana':n<=56?'Dieta Vegana':'Vegana + Cocinada';
+  const dDose=n<=42?'Aguacate, frutas, coco, vegetales, semillas permitidas (nueces, almendras, merey, avellanas). ❌ Sin lácteos, arroz, trigo ni maní en todo el protocolo.':n<=56?'Desde semana 7 puedes romper con 2 huevos o 1 pieza de pescado cada 3 semanas. ❌ Sin lácteos, arroz ni trigo.':'Puedes añadir papa, yuca, plátano, frijoles, lentejas y otros granos cocinados. ❌ Sin lácteos, arroz ni trigo.';
+  items.push({icon:'🥗',name:dName,slot:'always',dose:dDose});
+  if(!isFast)items.push({icon:'🥕',name:'Jugo de Zanahoria',slot:'morning',dose:'40 onzas (litro y cuarto) al día con extractor. Puedes refrigerar hasta 1 día.'});
+  items.push({icon:'☀️',name:'B COMP +CoQ10',slot:'morning',dose:'2 cápsulas por la mañana.'});
+  items.push({icon:'💧',name:'Ormux',slot:'morning',dose:'1 medida a media mañana diluida en 1 vaso de agua o jugo.'});
+  items.push({icon:'🧬',name:'Enzymes +Serra · Mañana',slot:'morning',dose:'1 cápsula en ayuno por la mañana con vaso de agua de 40ml. No comer sólido 1 hora después.'});
+  items.push({icon:'⬛',name:'Charcoal +AloeFerox · Mañana',slot:'morning',dose:'2 cápsulas a media mañana con agua o jugo. Tomar con 3h de diferencia de tus medicinas.'});
+  items.push({icon:'🧬',name:'Enzymes +Serra · Tarde',slot:'noon',dose:'1 cápsula a media tarde con vaso de agua de 40ml. No comer sólido 1 hora después.'});
+  items.push({icon:'⬛',name:'Charcoal +AloeFerox · Tarde',slot:'noon',dose:'2 cápsulas a media tarde con agua o jugo. Heces pueden volverse negras/verdes: es normal.'});
+  if(n>=4)items.push({icon:'💊',name:'Inntra',slot:'noon',dose:'2 cápsulas a media tarde. ⚠️ No tomar con Estatinas ni Anticoagulantes.'});
+  if(Se.has(n))items.push({icon:'🔶',name:'Selenium +Active T3',slot:'noon',dose:'2 cápsulas con el almuerzo. Ciclo: 1 mes ON / 1 mes OFF. ⚠️ Suspender si hay mareo o dolor de cabeza.'});
+  items.push({icon:'🌙',name:'Magnesium +Lysine',slot:'night',dose:'2 cápsulas por la noche.'});
+  if(n>=6)items.push({icon:'🔵',name:'Bradax',slot:'night',dose:'2 cápsulas por la noche.'});
+  if(isCab){items.push({icon:'🥬',name:'Jugo de Repollo',slot:'morning',dose:'8 onzas en ayuno (antes del sólido). Verde o morado. Ciclo: 3 semanas ON / 2 semanas OFF.'});
+    const od=Math.min(((n-1)%35)+1,10);
+    items.push({icon:'🌿',name:'Oregano Oil',slot:'morning',dose:`${od} gota${od>1?'s':''} en el jugo de repollo. Sube 1 gota/día hasta 10. Suspende si hay malestar.`});}
+  if(isEnema)items.push({icon:'☕',name:'Enema de Café',slot:'always',dose:'700cc agua + 2 cdas café molido orgánico. Hierve 10 min, enfría, cuela, aplica 10 min a temperatura ambiente.'});
+  if(isZinc)items.push({icon:'⚡',name:'Zinc +Max',slot:'always',dose:'1 vez al día según etiqueta del frasco. Ciclo: 2 semanas sí / 2 semanas no.'});
+  if(bsPos!==null){const bd=bsPos<=3?'½ cucharadita por la mañana (días 1-3 del ciclo)':bsPos<=6?'1 cucharadita × 2 veces al día':('1 cucharadita × 3 veces al día (día '+bsPos+')');
+    items.push({icon:'🫙',name:'Black Seed Oil',slot:'morning',dose:bd+'. Tomar 3+ horas después del Orégano Oil. Ciclo: 4 semanas ON / 2 semanas OFF.'});}
+  return items;
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATOR STATE
+// ═══════════════════════════════════════════════
+let startDate=null, F,E,C,Z,BS,Se;
+let currentSlot=0;
+let dayItems=[];
+
+const SLOTS=[
+  {key:'morning',icon:'🌅',label:'Mañana',   theme:'theme-morning'},
+  {key:'noon',   icon:'☀️', label:'Mediodía', theme:'theme-noon'},
+  {key:'night',  icon:'🌙',label:'Noche',    theme:'theme-night'},
+  {key:'always', icon:'🌿',label:'Todo el día',theme:'theme-always'},
+  {key:'fast',   icon:'⚡',label:'AYUNO',    theme:'theme-fast'},
+];
+
+function changeSlot(delta) {
+  const nonEmpty = getNonEmptySlots();
+  const idx = nonEmpty.indexOf(currentSlot);
+  const newIdx = (idx + delta + nonEmpty.length) % nonEmpty.length;
+  currentSlot = nonEmpty[newIdx];
+  renderSlot();
+}
+
+function getNonEmptySlots() {
+  return SLOTS.map((_,i)=>i).filter(i => getSlotItems(i).length > 0);
+}
+
+function getSlotItems(slotIdx) {
+  return dayItems.filter(item => item.slot === SLOTS[slotIdx].key);
+}
+
+function renderSlot() {
+  const slot  = SLOTS[currentSlot];
+  const items = getSlotItems(currentSlot);
+  const wrap  = document.getElementById('slot-wrap');
+
+  // Theme
+  wrap.className = 'slot-wrap ' + slot.theme;
+
+  // Header
+  document.getElementById('slot-icon').textContent  = slot.icon;
+  document.getElementById('slot-name').textContent  = slot.label;
+
+  const nonEmpty = getNonEmptySlots();
+  const pos = nonEmpty.indexOf(currentSlot) + 1;
+  document.getElementById('slot-count').textContent = `${pos} de ${nonEmpty.length} franjas`;
+
+  // Dots
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  nonEmpty.forEach((si, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (si === currentSlot ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+
+  // Items
+  const list = document.getElementById('items-list');
+  list.innerHTML = '';
+
+  if (slot.key === 'fast') {
+    const fb = document.createElement('div');
+    fb.className = 'fasting-block';
+    fb.innerHTML = `<div class="f-ico">⚡</div>
+      <div class="f-title">DÍA DE AYUNO</div>
+      <div class="f-desc">Sin comida ni jugos hoy.<br>Solo agua. 24 horas.</div>`;
+    list.appendChild(fb);
+  } else if (!items.length) {
+    list.innerHTML = '<div class="slot-empty">— Sin elementos para esta franja —</div>';
+  } else {
+    items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.innerHTML = `
+        <div class="item-icon">${item.icon}</div>
+        <div class="item-text">
+          <div class="item-name">${item.name}</div>
+          <div class="item-dose">${item.dose}</div>
+        </div>
+        <div class="item-chevron">›</div>`;
+      row.addEventListener('click', () => openModal(item));
+      list.appendChild(row);
+    });
+  }
+
+  // Arrow visibility: always show (it wraps around)
+}
+
+function openModal(item) {
+  document.getElementById('m-ico').textContent  = item.icon;
+  document.getElementById('m-name').textContent = item.name;
+  document.getElementById('m-dose').textContent = item.dose;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal'))
+    document.getElementById('modal').classList.remove('open');
+}
+
+// Swipe support
+let touchStartX = null;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, {passive:true});
+document.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) changeSlot(dx < 0 ? 1 : -1);
+  touchStartX = null;
+}, {passive:true});
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+function renderApp() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const n = pDay(today, startDate);
+
+  const DIAS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('h-date').textContent =
+    `${DIAS[today.getDay()]} ${today.getDate()} de ${MESES[today.getMonth()]}`;
+  document.getElementById('day-pill').textContent = n ? `Día ${n} de ${TOTAL}` : '—';
+
+  if (!n) {
+    dayItems = [];
+    document.getElementById('items-list').innerHTML =
+      '<div class="slot-empty">Fuera del período del protocolo.</div>';
+    return;
+  }
+
+  dayItems = buildItems(n, F, E, C, Z, BS, Se);
+
+  // Start at morning (or fasting if today is a fast)
+  if (F.has(n)) {
+    currentSlot = SLOTS.findIndex(s => s.key === 'fast');
+  } else {
+    currentSlot = SLOTS.findIndex(s => s.key === 'morning');
+  }
+  renderSlot();
+}
+
+function initApp() {
+  const val = document.getElementById('start-input').value;
+  if (!val) { alert('Por favor selecciona una fecha.'); return; }
+  startDate = new Date(val + 'T00:00:00');
+  saveStart(startDate);
+  launch();
+}
+function launch() {
+  F=getFasting();E=getEnema(F);C=getCabbage();Z=getZinc();BS=getBlackSeed();Se=getSelenium();
+  document.getElementById('setup').classList.add('hidden');
+  renderApp();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = loadStart();
+  if (saved) { startDate = saved; launch(); }
+  else {
+    document.getElementById('start-input').value = new Date().toISOString().split('T')[0];
+  }
+});
+</script>
+</body>
+</html>
