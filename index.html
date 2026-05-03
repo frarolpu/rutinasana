@@ -52,19 +52,41 @@
     /* ── HEADER ── */
     .app-header {
       background: #fff;
-      padding: 11px 16px 9px;
+      padding: 10px 8px 8px;
       border-bottom: 2px solid #e2e8f0;
       flex-shrink: 0;
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; gap: 6px;
     }
-    .h-left .h-date { font-size: 1.05rem; font-weight: 800; color: #0f172a; }
-    .h-left .h-sub  { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
+    .day-arrow {
+      background: #f1f5f9; border: 1.5px solid #e2e8f0;
+      color: #0f172a; font-size: 1.5rem; font-weight: 900;
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .12s;
+    }
+    .day-arrow:active { background: #e2e8f0; }
+    .day-center {
+      flex: 1; text-align: center; min-width: 0;
+    }
+    .h-date { font-size: 1rem; font-weight: 800; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .h-sub  { font-size: 0.72rem; color: #94a3b8; margin-top: 1px; }
     .day-pill {
       background: #2563eb; color: #fff;
-      font-weight: 800; font-size: 0.82rem;
-      padding: 5px 14px; border-radius: 100px;
-      white-space: nowrap;
+      font-weight: 800; font-size: 0.78rem;
+      padding: 3px 10px; border-radius: 100px;
+      white-space: nowrap; display: inline-block; margin-top: 3px;
     }
+    .day-pill.today-pill { background: #16a34a; }
+    .btn-today {
+      background: #f0fdf4; border: 1.5px solid #22c55e;
+      color: #16a34a; font-size: 0.7rem; font-weight: 800;
+      padding: 5px 8px; border-radius: 10px;
+      cursor: pointer; flex-shrink: 0; white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-today.hidden { visibility: hidden; }
 
     /* ── SLOT NAVIGATOR ── */
     .slot-wrap {
@@ -198,20 +220,7 @@
       font-size: 1.08rem; font-weight: 700; cursor: pointer;
     }
 
-    /* ── BOTTOM NAV ── */
-    .viewnav {
-      display: flex; gap: 5px; padding: 7px 10px;
-      background: #fff; border-top: 2px solid #e2e8f0;
-      flex-shrink: 0;
-    }
-    .vnbtn {
-      flex: 1; padding: 9px 4px;
-      background: transparent; border: 1.5px solid #e2e8f0;
-      color: #94a3b8; font-size: 0.78rem; font-weight: 700;
-      border-radius: 10px; cursor: pointer; text-align: center;
-      text-decoration: none; display: block;
-    }
-    .vnbtn.active { background: #eff6ff; border-color: #2563eb; color: #2563eb; }
+
 
     /* Slot color themes */
     .theme-morning .slot-bar  { background: #fffbeb; }
@@ -257,11 +266,14 @@
 
 <!-- HEADER -->
 <header class="app-header">
-  <div class="h-left">
+  <button class="day-arrow" onclick="changeDay(-1)">‹</button>
+  <div class="day-center">
     <div class="h-date" id="h-date">—</div>
     <div class="h-sub">Protocolo · 4 meses</div>
+    <div class="day-pill" id="day-pill">Día —</div>
   </div>
-  <div class="day-pill" id="day-pill">Día —</div>
+  <button class="day-arrow" onclick="changeDay(1)">›</button>
+  <button class="btn-today hidden" id="btn-today" onclick="goToday()">Hoy</button>
 </header>
 
 <!-- SLOT NAVIGATOR -->
@@ -287,13 +299,6 @@
   <div class="items-list" id="items-list"></div>
 
 </div>
-
-<!-- BOTTOM NAV -->
-<nav class="viewnav">
-  <a class="vnbtn" href="index.html">📋 Lista</a>
-  <a class="vnbtn" href="option2.html">⊞ Panel</a>
-  <a class="vnbtn active" href="option3.html">➤ Guía</a>
-</nav>
 
 <!-- MODAL -->
 <div class="backdrop" id="modal" onclick="closeModal(event)">
@@ -368,6 +373,7 @@ function buildItems(n,F,E,C,Z,BS,Se) {
 let startDate=null, F,E,C,Z,BS,Se;
 let currentSlot=0;
 let dayItems=[];
+let viewDate=null; // currently displayed date
 
 const SLOTS=[
   {key:'morning',icon:'🌅',label:'Mañana',   theme:'theme-morning'},
@@ -472,32 +478,62 @@ document.addEventListener('touchend', e => {
 }, {passive:true});
 
 // ═══════════════════════════════════════════════
+// DAY NAVIGATION
+// ═══════════════════════════════════════════════
+function changeDay(delta) {
+  viewDate = new Date(viewDate.getTime() + delta * 86400000);
+  currentSlot = 0;
+  renderApp();
+}
+function goToday() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  viewDate = today;
+  currentSlot = 0;
+  renderApp();
+}
+
+// ═══════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════
 function renderApp() {
   const today = new Date(); today.setHours(0,0,0,0);
-  const n = pDay(today, startDate);
+  if (!viewDate) viewDate = new Date(today);
+  const n = pDay(viewDate, startDate);
+  const isToday = viewDate.getTime() === today.getTime();
 
   const DIAS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   document.getElementById('h-date').textContent =
-    `${DIAS[today.getDay()]} ${today.getDate()} de ${MESES[today.getMonth()]}`;
-  document.getElementById('day-pill').textContent = n ? `Día ${n} de ${TOTAL}` : '—';
+    `${DIAS[viewDate.getDay()]} ${viewDate.getDate()} de ${MESES[viewDate.getMonth()]}`;
+
+  const pill = document.getElementById('day-pill');
+  pill.textContent = n ? `Día ${n} de ${TOTAL}` : 'Fuera del protocolo';
+  pill.className = 'day-pill' + (isToday ? ' today-pill' : '');
+
+  // Show/hide Hoy button
+  const btnHoy = document.getElementById('btn-today');
+  btnHoy.className = 'btn-today' + (isToday ? ' hidden' : '');
 
   if (!n) {
     dayItems = [];
     document.getElementById('items-list').innerHTML =
-      '<div class="slot-empty">Fuera del período del protocolo.</div>';
+      '<div class="slot-empty">Este día está fuera del protocolo.</div>';
+    document.getElementById('dots').innerHTML = '';
+    document.getElementById('slot-icon').textContent = '—';
+    document.getElementById('slot-name').textContent = '—';
+    document.getElementById('slot-count').textContent = '';
+    document.getElementById('slot-wrap').className = 'slot-wrap';
     return;
   }
 
   dayItems = buildItems(n, F, E, C, Z, BS, Se);
 
-  // Start at morning (or fasting if today is a fast)
-  if (F.has(n)) {
-    currentSlot = SLOTS.findIndex(s => s.key === 'fast');
-  } else {
-    currentSlot = SLOTS.findIndex(s => s.key === 'morning');
+  // Default slot: morning (or fasting)
+  const nonEmpty = getNonEmptySlots();
+  if (!nonEmpty.includes(currentSlot)) {
+    currentSlot = F.has(n)
+      ? SLOTS.findIndex(s => s.key === 'fast')
+      : SLOTS.findIndex(s => s.key === 'morning');
   }
   renderSlot();
 }
@@ -511,6 +547,8 @@ function initApp() {
 }
 function launch() {
   F=getFasting();E=getEnema(F);C=getCabbage();Z=getZinc();BS=getBlackSeed();Se=getSelenium();
+  const today = new Date(); today.setHours(0,0,0,0);
+  viewDate = today;
   document.getElementById('setup').classList.add('hidden');
   renderApp();
 }
