@@ -356,10 +356,10 @@ function buildItems(n,F,E,C,Z,BS,Se) {
   const items=[];
   if(isFast){items.push({icon:'⚡',name:'AYUNO',slot:'fast',dose:'Sin comida ni zumos. Solo agua. 24 horas de descanso digestivo.'});return items;}
   const dName=n<=42?'Dieta Cruda Vegana':n<=56?'Dieta Vegana':'Vegana + Cocinada';
-  const dDose=n<=42?'Aguacate, frutas, coco, vegetales, semillas permitidas (nueces, almendras, merey, avellanas). ❌ Sin lácteos, arroz, trigo ni maní en todo el protocolo.':n<=56?'Desde semana 7 puedes romper con 2 huevos o 1 pieza de pescado cada 3 semanas. ❌ Sin lácteos, arroz ni trigo.':'Puedes añadir papa, yuca, plátano, frijoles, lentejas y otros granos cocinados. ❌ Sin lácteos, arroz ni trigo.';
+  const dDose=n<=42?'Aguacate, frutas, coco, vegetales, semillas permitidas (nueces, almendras, merey, avellanas). ❌ Sin lácteos, arroz, trigo ni maní en todo el protocolo. ❌ Sin carne (ningún tipo) durante las primeras 6 semanas.':n<=56?'Desde semana 7 puedes romper con 2 huevos o 1 pieza de pescado blanco cada 3 semanas. ❌ Sin lácteos, arroz ni trigo. ❌ Sin carne roja ni pollo todavía.':'Puedes añadir papa, yuca, plátano, frijoles, lentejas y otros granos cocinados. Pollo o pavo con moderación. ❌ Sin carne roja. ❌ Sin lácteos, arroz ni trigo.';
   items.push({icon:'🥗',name:dName,slot:'always',dose:dDose});
   // ── MAÑANA (primera hora, en ayuno) ──
-  if(!isFast)items.push({icon:'🥕',name:'Zumo de Zanahoria',slot:'morning',dose:'Litro y cuarto al día con extractor. Puedes refrigerar hasta 1 día.'});
+  if(!isFast)items.push({icon:'🥕',name:'Zumo de Zanahoria',slot:'always',dose:'Litro y cuarto al día con extractor. Puede tomarse a lo largo del día. Puedes refrigerar hasta 1 día.'});
   items.push({icon:'☀️',name:'B COMP +CoQ10',slot:'morning',dose:'2 cápsulas por la mañana, a primera hora.'});
   items.push({icon:'🧬',name:'Enzymes +Serra · Mañana',slot:'morning',dose:'1 cápsula en ayuno a primera hora de la mañana con vaso de agua de 40ml. No comer sólido 1 hora después.'});
   if(isCab){
@@ -382,7 +382,7 @@ function buildItems(n,F,E,C,Z,BS,Se) {
   if(n>=6)items.push({icon:'🔵',name:'Bradax',slot:'night',dose:'2 cápsulas por la noche.'});
   // ── TODO EL DÍA ──
   if(isEnema)items.push({icon:'☕',name:'Enema de Café',slot:'always',dose:'700cc agua + 2 cdas café molido orgánico. Hierve 10 min, enfría, cuela, aplica 10 min a temperatura ambiente.'});
-  if(isZinc)items.push({icon:'⚡',name:'Zinc +Max',slot:'always',dose:'1 vez al día en cualquier momento según etiqueta del frasco. Ciclo: 2 semanas sí / 2 semanas no.'});
+  if(isZinc)items.push({icon:'⚡',name:'Zinc +Max',slot:'afternoon',dose:'1 vez al día por la tarde según etiqueta del frasco. Ciclo: 2 semanas sí / 2 semanas no.'});
   return items;
 }
 
