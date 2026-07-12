@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>Protocolo · Guía</title>
+  <title>Rutinasana</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -262,6 +262,140 @@
     .theme-fast .slot-bar   { background: #fff5f5; }
     .theme-fast .slot-name  { color: #991b1b; }
     .theme-fast .slot-color-bar { background: #f87171; }
+
+    /* ── TABS ── */
+    .tab-bar {
+      display: flex; flex-shrink: 0;
+      background: #fff; border-bottom: 2px solid #e2e8f0;
+    }
+    .tab-btn {
+      flex: 1; padding: 11px 4px 9px;
+      background: none; border: none; cursor: pointer;
+      font-size: 0.88rem; font-weight: 700; color: #94a3b8;
+      border-bottom: 3px solid transparent;
+      transition: color .15s, border-color .15s;
+      -webkit-tap-highlight-color: transparent;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .tab-btn .tab-ico { font-size: 1.3rem; }
+    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
+
+    /* ── LOGBOOK ── */
+    #logbook-panel {
+      flex: 1; display: flex; flex-direction: column;
+      overflow: hidden; min-height: 0; background: #f0f4f8;
+    }
+    #logbook-panel.hidden { display: none; }
+    #guide-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+    #guide-panel.hidden { display: none; }
+
+    .log-date-bar {
+      display: flex; align-items: center; gap: 6px;
+      background: #fff; padding: 8px 10px;
+      border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+    }
+    .log-date-arrow {
+      background: #f1f5f9; border: 1.5px solid #e2e8f0;
+      color: #0f172a; font-size: 1.4rem; font-weight: 900;
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; border: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .log-date-arrow:active { background: #e2e8f0; }
+    .log-date-label {
+      flex: 1; text-align: center;
+      font-size: 1rem; font-weight: 800; color: #0f172a;
+    }
+    .log-date-today {
+      font-size: 0.7rem; font-weight: 700;
+      background: #2563eb; color: #fff;
+      border: none; border-radius: 20px;
+      padding: 4px 10px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .log-date-today.hidden { visibility: hidden; }
+
+    .log-form-card {
+      margin: 10px 12px 0;
+      background: #fff; border-radius: 18px;
+      padding: 14px 14px 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      flex-shrink: 0;
+    }
+    .log-form-title {
+      font-size: 0.8rem; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px;
+    }
+    .log-field {
+      display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px;
+    }
+    .log-field label { font-size: 0.78rem; font-weight: 700; color: #64748b; }
+    .log-input {
+      font-size: 1rem; padding: 11px 12px;
+      border-radius: 12px; border: 1.8px solid #e2e8f0;
+      background: #f8fafc; color: #0f172a; width: 100%;
+      -webkit-appearance: none; appearance: none;
+    }
+    .log-input:focus { outline: none; border-color: #2563eb; }
+    .log-textarea {
+      font-size: 1rem; padding: 11px 12px;
+      border-radius: 12px; border: 1.8px solid #e2e8f0;
+      background: #f8fafc; color: #0f172a; width: 100%;
+      resize: none; font-family: inherit; min-height: 70px;
+    }
+    .log-textarea:focus { outline: none; border-color: #2563eb; }
+    .log-submit {
+      width: 100%; padding: 13px;
+      background: #2563eb; color: #fff;
+      font-size: 1.05rem; font-weight: 800;
+      border: none; border-radius: 14px; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity .15s;
+    }
+    .log-submit:active { opacity: .8; }
+    .log-submit:disabled { background: #94a3b8; cursor: default; }
+
+    .log-entries-wrap {
+      flex: 1; overflow-y: auto; padding: 10px 12px 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .log-section-title {
+      font-size: 0.75rem; font-weight: 700; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .5px;
+      margin: 12px 0 6px 2px;
+    }
+    .log-entry {
+      background: #fff; border-radius: 14px;
+      padding: 12px 14px; margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex; align-items: flex-start; gap: 10px;
+      border-left: 4px solid #2563eb;
+    }
+    .log-entry-time {
+      font-size: 1rem; font-weight: 800; color: #2563eb;
+      flex-shrink: 0; min-width: 44px;
+    }
+    .log-entry-med {
+      flex: 1; font-size: 0.98rem; color: #0f172a; line-height: 1.45;
+    }
+    .log-delete {
+      background: none; border: none; cursor: pointer;
+      font-size: 1.2rem; color: #cbd5e1; padding: 2px 4px;
+      -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+    }
+    .log-delete:active { color: #ef4444; }
+    .log-empty {
+      text-align: center; padding: 40px 20px;
+      color: #94a3b8; font-size: 1rem; line-height: 1.6;
+    }
+    .log-empty .log-empty-ico { font-size: 2.5rem; margin-bottom: 8px; }
+    .log-status {
+      text-align: center; font-size: 0.82rem; color: #94a3b8;
+      padding: 6px 0; flex-shrink: 0;
+    }
+    .log-status.err { color: #ef4444; }
   </style>
 </head>
 <body>
@@ -288,27 +422,68 @@
   <button class="btn-today hidden" id="btn-today" onclick="goToday()">Hoy</button>
 </header>
 
-<!-- SLOT NAVIGATOR -->
-<div class="slot-wrap" id="slot-wrap">
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-log" onclick="switchTab('log')">
+    <span class="tab-ico">📓</span>Registro
+  </button>
+  <button class="tab-btn" id="tab-guide" onclick="switchTab('guide')">
+    <span class="tab-ico">📋</span>Guía del Día
+  </button>
+</div>
 
-  <!-- Time block header -->
-  <div class="slot-bar" id="slot-bar">
-    <button class="slot-arrow" id="btn-prev" onclick="changeSlot(-1)">‹</button>
-    <div class="slot-title-block">
-      <div class="slot-icon"  id="slot-icon">—</div>
-      <div class="slot-name"  id="slot-name">—</div>
-      <div class="slot-count" id="slot-count">—</div>
-    </div>
-    <button class="slot-arrow" id="btn-next" onclick="changeSlot(1)">›</button>
+<!-- LOGBOOK PANEL -->
+<div id="logbook-panel">
+
+  <!-- Date navigator -->
+  <div class="log-date-bar">
+    <button class="log-date-arrow" onclick="changeLogDay(-1)">‹</button>
+    <div class="log-date-label" id="log-date-label">—</div>
+    <button class="log-date-today hidden" id="log-btn-today" onclick="logGoToday()">Hoy</button>
+    <button class="log-date-arrow" onclick="changeLogDay(1)">›</button>
   </div>
 
-  <div class="slot-color-bar" id="slot-color-bar"></div>
+  <!-- Form -->
+  <div class="log-form-card">
+    <div class="log-form-title">✏️ Añadir registro</div>
+    <div class="log-field">
+      <label for="log-time-input">Hora</label>
+      <input type="time" class="log-input" id="log-time-input" />
+    </div>
+    <div class="log-field">
+      <label for="log-med-input">Medicación dada</label>
+      <textarea class="log-textarea" id="log-med-input" placeholder="Ej: B COMP + CoQ10, 2 cápsulas" rows="2"></textarea>
+    </div>
+    <div class="log-status" id="log-status"></div>
+    <button class="log-submit" id="log-submit-btn" onclick="submitEntry()">Registrar ✓</button>
+  </div>
 
-  <!-- Dot indicators -->
-  <div class="dots" id="dots"></div>
+  <!-- Entries list -->
+  <div class="log-entries-wrap" id="log-entries-wrap">
+    <div class="log-section-title" id="log-entries-title"></div>
+    <div id="log-entries-list"></div>
+  </div>
 
-  <!-- Items -->
-  <div class="items-list" id="items-list"></div>
+</div>
+
+<!-- GUIDE PANEL -->
+<div id="guide-panel" class="hidden">
+
+  <!-- SLOT NAVIGATOR -->
+  <div class="slot-wrap" id="slot-wrap">
+    <div class="slot-bar" id="slot-bar">
+      <button class="slot-arrow" id="btn-prev" onclick="changeSlot(-1)">‹</button>
+      <div class="slot-title-block">
+        <div class="slot-icon"  id="slot-icon">—</div>
+        <div class="slot-name"  id="slot-name">—</div>
+        <div class="slot-count" id="slot-count">—</div>
+      </div>
+      <button class="slot-arrow" id="btn-next" onclick="changeSlot(1)">›</button>
+    </div>
+    <div class="slot-color-bar" id="slot-color-bar"></div>
+    <div class="dots" id="dots"></div>
+    <div class="items-list" id="items-list"></div>
+  </div>
 
 </div>
 
@@ -384,6 +559,143 @@ function buildItems(n,F,E,C,Z,BS,Se) {
   if(isEnema)items.push({icon:'☕',name:'Enema de Café',slot:'always',dose:'700cc agua + 2 cdas café molido orgánico. Hierve 10 min, enfría, cuela, aplica 10 min a temperatura ambiente.'});
   if(isZinc)items.push({icon:'⚡',name:'Zinc +Max',slot:'afternoon',dose:'1 vez al día por la tarde según etiqueta del frasco. Ciclo: 2 semanas sí / 2 semanas no.'});
   return items;
+}
+
+// ═══════════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════════
+let activeTab = 'log';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.getElementById('tab-log').className   = 'tab-btn' + (tab==='log'   ? ' active' : '');
+  document.getElementById('tab-guide').className = 'tab-btn' + (tab==='guide' ? ' active' : '');
+  document.getElementById('logbook-panel').classList.toggle('hidden', tab !== 'log');
+  document.getElementById('guide-panel').classList.toggle('hidden',   tab !== 'guide');
+  if (tab === 'log') loadEntries();
+}
+
+// ═══════════════════════════════════════════════
+// LOGBOOK
+// ═══════════════════════════════════════════════
+// ⬇ Replace this with your Render web service URL once deployed
+const API_BASE = 'https://rutinasana-api.onrender.com';
+
+const DIAS_ES  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio',
+                  'agosto','septiembre','octubre','noviembre','diciembre'];
+
+let logDate = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+
+function isoDate(d) { return d.toISOString().split('T')[0]; }
+
+function renderLogDateBar() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const isToday = logDate.getTime() === today.getTime();
+  document.getElementById('log-date-label').textContent =
+    (isToday ? 'Hoy · ' : '') +
+    DIAS_ES[logDate.getDay()] + ' ' + logDate.getDate() + ' de ' + MESES_ES[logDate.getMonth()];
+  document.getElementById('log-btn-today').className = 'log-date-today' + (isToday ? ' hidden' : '');
+}
+
+function changeLogDay(delta) {
+  logDate = new Date(logDate.getTime() + delta * 86400000);
+  renderLogDateBar();
+  loadEntries();
+}
+function logGoToday() {
+  logDate = new Date(); logDate.setHours(0,0,0,0);
+  renderLogDateBar();
+  loadEntries();
+}
+
+function setLogStatus(msg, isErr) {
+  const el = document.getElementById('log-status');
+  el.textContent = msg;
+  el.className = 'log-status' + (isErr ? ' err' : '');
+}
+
+async function loadEntries() {
+  const list = document.getElementById('log-entries-list');
+  const title = document.getElementById('log-entries-title');
+  renderLogDateBar();
+  list.innerHTML = '<div class="log-empty"><div class="log-empty-ico">⏳</div>Cargando…</div>';
+  title.textContent = '';
+  try {
+    const res = await fetch(`${API_BASE}/entries?date=${isoDate(logDate)}`);
+    if (!res.ok) throw new Error('Error ' + res.status);
+    const rows = await res.json();
+    renderEntries(rows);
+  } catch (e) {
+    list.innerHTML = `<div class="log-empty"><div class="log-empty-ico">⚠️</div>No se pudo conectar al servidor.<br><small>${e.message}</small></div>`;
+    title.textContent = '';
+  }
+}
+
+function renderEntries(rows) {
+  const list  = document.getElementById('log-entries-list');
+  const title = document.getElementById('log-entries-title');
+  list.innerHTML = '';
+  if (!rows.length) {
+    title.textContent = '';
+    list.innerHTML = '<div class="log-empty"><div class="log-empty-ico">📭</div>Sin registros para este día.<br>Añade el primero arriba.</div>';
+    return;
+  }
+  title.textContent = `${rows.length} registro${rows.length !== 1 ? 's' : ''}`;
+  rows.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'log-entry';
+    div.innerHTML = `
+      <div class="log-entry-time">${row.time.slice(0,5)}</div>
+      <div class="log-entry-med">${escHtml(row.medication)}</div>
+      <button class="log-delete" onclick="deleteEntry(${row.id},this)" title="Eliminar">🗑</button>`;
+    list.appendChild(div);
+  });
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function submitEntry() {
+  const timeEl = document.getElementById('log-time-input');
+  const medEl  = document.getElementById('log-med-input');
+  const btn    = document.getElementById('log-submit-btn');
+  const time   = timeEl.value;
+  const med    = medEl.value.trim();
+  if (!time) { setLogStatus('⚠️ Indica la hora', true); timeEl.focus(); return; }
+  if (!med)  { setLogStatus('⚠️ Escribe la medicación', true); medEl.focus(); return; }
+  btn.disabled = true;
+  setLogStatus('Guardando…', false);
+  try {
+    const res = await fetch(`${API_BASE}/entries`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date: isoDate(logDate), time, medication: med }),
+    });
+    if (!res.ok) throw new Error('Error ' + res.status);
+    medEl.value = '';
+    setLogStatus('✓ Guardado', false);
+    setTimeout(() => setLogStatus('', false), 2000);
+    loadEntries();
+  } catch (e) {
+    setLogStatus('⚠️ Error al guardar: ' + e.message, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function deleteEntry(id, btnEl) {
+  if (!confirm('¿Eliminar este registro?')) return;
+  btnEl.disabled = true;
+  try {
+    const res = await fetch(`${API_BASE}/entries/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Error ' + res.status);
+    loadEntries();
+  } catch (e) {
+    alert('No se pudo eliminar: ' + e.message);
+    btnEl.disabled = false;
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -503,13 +815,20 @@ document.addEventListener('touchend', e => {
 // ═══════════════════════════════════════════════
 function changeDay(delta) {
   viewDate = new Date(viewDate.getTime() + delta * 86400000);
+  // keep logbook in sync with guide date
+  logDate = new Date(viewDate);
   currentSlot = 0;
+  renderLogDateBar();
+  if (activeTab === 'log') loadEntries();
   renderApp();
 }
 function goToday() {
   const today = new Date(); today.setHours(0,0,0,0);
   viewDate = today;
+  logDate  = new Date(today);
   currentSlot = 0;
+  renderLogDateBar();
+  if (activeTab === 'log') loadEntries();
   renderApp();
 }
 
@@ -571,6 +890,13 @@ function launch() {
   const today = new Date(); today.setHours(0,0,0,0);
   viewDate = today;
   document.getElementById('setup').classList.add('hidden');
+  // Set default time to now
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('log-time-input').value = `${hh}:${mm}`;
+  renderLogDateBar();
+  loadEntries();
   renderApp();
 }
 
