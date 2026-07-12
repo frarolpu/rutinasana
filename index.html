@@ -339,13 +339,17 @@
       -webkit-appearance: none; appearance: none;
     }
     .log-input:focus { outline: none; border-color: #2563eb; }
-    .log-textarea {
-      font-size: 1rem; padding: 11px 12px;
-      border-radius: 12px; border: 1.8px solid #e2e8f0;
-      background: #f8fafc; color: #0f172a; width: 100%;
-      resize: none; font-family: inherit; min-height: 70px;
+    /* ── MEDICATION CHIPS ── */
+    .med-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .med-chip {
+      padding: 10px 16px; border-radius: 22px;
+      border: 2px solid #e2e8f0; background: #f8fafc;
+      color: #475569; font-size: 0.97rem; font-weight: 600;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+      transition: background .12s, border-color .12s, color .12s;
+      user-select: none; line-height: 1;
     }
-    .log-textarea:focus { outline: none; border-color: #2563eb; }
+    .med-chip.selected { background: #2563eb; border-color: #2563eb; color: #fff; }
     .log-submit {
       width: 100%; padding: 13px;
       background: #2563eb; color: #fff;
@@ -451,8 +455,17 @@
       <input type="time" class="log-input" id="log-time-input" />
     </div>
     <div class="log-field">
-      <label for="log-med-input">Medicación dada</label>
-      <textarea class="log-textarea" id="log-med-input" placeholder="Ej: B COMP + CoQ10, 2 cápsulas" rows="2"></textarea>
+      <label>Medicación dada</label>
+      <div class="med-chips" id="med-chips">
+        <div class="med-chip" onclick="toggleChip(this)">Tramadol</div>
+        <div class="med-chip" onclick="toggleChip(this)">Pregabalina</div>
+        <div class="med-chip" onclick="toggleChip(this)">Espidifen</div>
+        <div class="med-chip" onclick="toggleChip(this)">Traumeel</div>
+        <div class="med-chip" onclick="toggleChip(this)">Nolotil (metamizol)</div>
+        <div class="med-chip" onclick="toggleChip(this)">Selank</div>
+        <div class="med-chip" onclick="toggleChip(this)">Semax</div>
+        <div class="med-chip" onclick="toggleChip(this)">Ivermectina</div>
+      </div>
     </div>
     <div class="log-status" id="log-status"></div>
     <button class="log-submit" id="log-submit-btn" onclick="submitEntry()">Registrar ✓</button>
@@ -657,14 +670,20 @@ function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function toggleChip(el) { el.classList.toggle('selected'); }
+
+function getSelectedMeds() {
+  return [...document.querySelectorAll('#med-chips .med-chip.selected')]
+    .map(c => c.textContent).join(', ');
+}
+
 async function submitEntry() {
   const timeEl = document.getElementById('log-time-input');
-  const medEl  = document.getElementById('log-med-input');
   const btn    = document.getElementById('log-submit-btn');
   const time   = timeEl.value;
-  const med    = medEl.value.trim();
+  const med    = getSelectedMeds();
   if (!time) { setLogStatus('⚠️ Indica la hora', true); timeEl.focus(); return; }
-  if (!med)  { setLogStatus('⚠️ Escribe la medicación', true); medEl.focus(); return; }
+  if (!med)  { setLogStatus('⚠️ Selecciona al menos una medicación', true); return; }
   btn.disabled = true;
   setLogStatus('Guardando…', false);
   try {
@@ -674,7 +693,7 @@ async function submitEntry() {
       body: JSON.stringify({ date: isoDate(logDate), time, medication: med }),
     });
     if (!res.ok) throw new Error('Error ' + res.status);
-    medEl.value = '';
+    document.querySelectorAll('#med-chips .med-chip.selected').forEach(c => c.classList.remove('selected'));
     setLogStatus('✓ Guardado', false);
     setTimeout(() => setLogStatus('', false), 2000);
     loadEntries();
