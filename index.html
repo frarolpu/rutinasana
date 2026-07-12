@@ -400,6 +400,42 @@
       color: #94a3b8; font-size: 0.85rem; line-height: 1.6;
     }
     .log-empty .log-empty-ico { font-size: 2rem; margin-bottom: 6px; }
+
+    /* ── PROTOCOLO PAGE ── */
+    #protocolo-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+    #protocolo-panel.hidden { display: none; }
+    .proto-scroll {
+      flex: 1; overflow-y: auto; padding: 16px 16px 40px;
+      -webkit-overflow-scrolling: touch; background: #f8fafc;
+    }
+    .proto-title { font-size: 1.25rem; font-weight: 900; color: #0f172a; margin-bottom: 4px; line-height: 1.3; }
+    .proto-subtitle { font-size: 0.8rem; color: #94a3b8; margin-bottom: 20px; }
+    .proto-section-title {
+      font-size: 0.95rem; font-weight: 800; color: #2563eb;
+      margin-bottom: 8px; margin-top: 18px;
+    }
+    .proto-section-desc { font-size: 0.88rem; color: #475569; line-height: 1.65; margin-bottom: 12px; }
+    .proto-med-card {
+      background: #fff; border-radius: 14px; padding: 13px 14px 11px;
+      margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      border-left: 4px solid #e2e8f0;
+    }
+    .proto-med-card.base  { border-left-color: #6366f1; }
+    .proto-med-card.apoyo { border-left-color: #f59e0b; }
+    .proto-med-name { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 3px; }
+    .proto-med-fn { font-size: 0.82rem; color: #64748b; font-style: italic; line-height: 1.5; margin-bottom: 8px; }
+    .proto-bullets { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+    .proto-bullets li {
+      font-size: 0.86rem; color: #475569; line-height: 1.5;
+      padding-left: 14px; position: relative;
+    }
+    .proto-bullets li::before { content: '·'; position: absolute; left: 2px; color: #94a3b8; font-weight: 900; }
+    .proto-divider { height: 1px; background: #e2e8f0; margin: 16px 0; }
+    .proto-note {
+      background: #fffbeb; border: 1.5px solid #fbbf24;
+      border-radius: 12px; padding: 12px 14px;
+      font-size: 0.87rem; color: #92400e; line-height: 1.6;
+    }
   </style>
 </head>
 <body>
