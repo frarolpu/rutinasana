@@ -450,8 +450,8 @@
   </div>
 </div>
 
-<!-- HEADER -->
-<header class="app-header">
+<!-- HEADER (hidden - Guía tab removed) -->
+<header class="app-header" style="display:none">
   <button class="day-arrow" onclick="changeDay(-1)">‹</button>
   <div class="day-center">
     <div class="h-date" id="h-date">—</div>
@@ -679,7 +679,6 @@ let activeTab = 'log';
 function switchTab(tab) {
   activeTab = tab;
   document.getElementById('tab-log').className   = 'tab-btn' + (tab==='log'   ? ' active' : '');
-  document.getElementById('tab-guide').className = 'tab-btn' + (tab==='guide' ? ' active' : '');
   document.getElementById('tab-proto').className = 'tab-btn' + (tab==='proto' ? ' active' : '');
   document.getElementById('logbook-panel').classList.toggle('hidden',    tab !== 'log');
   document.getElementById('guide-panel').classList.toggle('hidden',      tab !== 'guide');
